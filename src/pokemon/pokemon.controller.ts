@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
@@ -6,11 +6,6 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 @Controller('pokemon')
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
-
-  @Post()
-  create(@Body() createPokemonDto: CreatePokemonDto) {
-    return this.pokemonService.create(createPokemonDto);
-  }
 
   @Get()
   findAll() {
@@ -20,6 +15,12 @@ export class PokemonController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.pokemonService.findOne(+id);
+  }
+
+  @Post()
+  // @HttpCode( HttpStatus.CREATED ) to customize our http code response
+  create(@Body() createPokemonDto: CreatePokemonDto) {
+    return this.pokemonService.create(createPokemonDto);
   }
 
   @Patch(':id')
