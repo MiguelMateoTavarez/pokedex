@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { PokeResponse } from './interfaces/poke-response.interface';
-import { PokemonService } from '../pokemon/pokemon.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Pokemon } from 'src/pokemon/entities/pokemon.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SeedService {
@@ -9,7 +11,8 @@ export class SeedService {
   private readonly axios: AxiosInstance = axios;
 
   constructor(
-    private readonly pokeService: PokemonService
+    @InjectModel( Pokemon.name )
+    private readonly pokemonModel: Model<Pokemon>
   ) { }
   async executeSeed() {
     /*
@@ -26,7 +29,7 @@ export class SeedService {
         const segments = url.split('/');
         const no: number = +segments[segments.length - 2];
 
-        this.pokeService.create({ name, no });
+        this.pokemonModel.create({ name, no });
       });
       return `${pokemons} pokemons has been created successfully`;
     } catch ({ message }) {
